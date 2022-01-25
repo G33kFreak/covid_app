@@ -1,11 +1,21 @@
+import 'dart:async';
+
 import 'package:covid_app/routes/routes.dart';
+import 'package:covid_app/services/bloc_observer/app_bloc_observer.dart';
 import 'package:covid_app/services/services_wrapper/services_provider.dart';
 import 'package:covid_app/services/services_wrapper/services_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-void main() {
-  runApp(MyApp());
-}
+void main() => runZonedGuarded(
+      () async {
+        BlocOverrides.runZoned(
+          () => runApp(MyApp()),
+          blocObserver: AppBlocObserver.instance(),
+        );
+      },
+      (error, stackTrace) {},
+    );
 
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
