@@ -21,7 +21,6 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: Container(),
         builder: (context, child) => ServicesWrapper(
           child: child!,
           navigatorKey: _navigatorKey,
