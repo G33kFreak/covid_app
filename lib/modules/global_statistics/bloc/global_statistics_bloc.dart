@@ -31,7 +31,7 @@ class GlobalStatisticsBloc
     emit(state.copyWith(
       selectedStat: event.newSelectedStat,
       statToShow: GlobalStatUtils.getRangeStat(
-        state.rangeStat!,
+        state.rangeStat,
         event.newSelectedStat,
       ),
     ));
