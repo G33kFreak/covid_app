@@ -1,5 +1,5 @@
 import 'package:covid_app/modules/global_statistics/bloc/global_statistics_bloc.dart';
-import 'package:covid_app/modules/global_statistics/models/global_range_stat.dart';
+import 'package:covid_app/repositories/statistics/models/global_range_stat.dart';
 
 class GlobalStatUtils {
   static List<int> getRangeStat(

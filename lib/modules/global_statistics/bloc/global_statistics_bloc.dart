@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
-import 'package:covid_app/modules/global_statistics/api/global_statistics_api.dart';
-import 'package:covid_app/modules/global_statistics/models/global_range_stat.dart';
-import 'package:covid_app/modules/global_statistics/models/global_statistics.dart';
 import 'package:covid_app/modules/global_statistics/utils/utils.dart';
+import 'package:covid_app/repositories/statistics/abstract_statistics_repository.dart';
+import 'package:covid_app/repositories/statistics/models/global_range_stat.dart';
+import 'package:covid_app/repositories/statistics/models/global_statistics.dart';
 import 'package:covid_app/utils/logger.dart';
 import 'package:covid_app/utils/utils.dart';
 import 'package:dio/dio.dart';
@@ -14,9 +14,12 @@ part 'global_statistics_state.dart';
 class GlobalStatisticsBloc
     extends Bloc<GlobalStatisticsEvent, GlobalStatisticsState> {
   final Dio client;
+  final IStatisticsRepository statisticsRepository;
 
-  GlobalStatisticsBloc({required this.client})
-      : super(const GlobalStatisticsState()) {
+  GlobalStatisticsBloc({
+    required this.client,
+    required this.statisticsRepository,
+  }) : super(const GlobalStatisticsState()) {
     on<InitGlobalStat>(_onInit);
     on<ChangedSelectedType>(_onChangedSelectedType);
   }
@@ -39,8 +42,8 @@ class GlobalStatisticsBloc
     Emitter<GlobalStatisticsState> emit,
   ) async {
     try {
-      final stat = await GlobalStatisticsApi.getGlobalStatistics(client);
-      final rangeStat = await GlobalStatisticsApi.getGlobalRangeStat(
+      final stat = await statisticsRepository.getGlobalStatistics(client);
+      final rangeStat = await statisticsRepository.getGlobalRangeStat(
         client,
         from: Utils.getFromDate(),
         to: Utils.getToDate(),

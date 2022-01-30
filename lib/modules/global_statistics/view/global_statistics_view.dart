@@ -1,6 +1,7 @@
 import 'package:covid_app/api_client/api_client.dart';
 import 'package:covid_app/modules/global_statistics/bloc/global_statistics_bloc.dart';
 import 'package:covid_app/modules/global_statistics/widgets/global_buttons.dart';
+import 'package:covid_app/repositories/statistics/abstract_statistics_repository.dart';
 import 'package:covid_app/widgets/stat_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +15,7 @@ class GlobalStatisticsView extends StatelessWidget {
       create: (context) {
         final bloc = GlobalStatisticsBloc(
           client: context.read<ApiClient>().client,
+          statisticsRepository: context.read<IStatisticsRepository>(),
         );
 
         bloc.add(InitGlobalStat());

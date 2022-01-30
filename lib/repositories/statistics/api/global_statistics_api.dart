@@ -1,5 +1,5 @@
-import 'package:covid_app/modules/global_statistics/models/global_range_stat.dart';
-import 'package:covid_app/modules/global_statistics/models/global_statistics.dart';
+import 'package:covid_app/repositories/statistics/models/global_range_stat.dart';
+import 'package:covid_app/repositories/statistics/models/global_statistics.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 

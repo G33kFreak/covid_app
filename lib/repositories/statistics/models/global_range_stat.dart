@@ -1,4 +1,4 @@
-import 'package:covid_app/modules/global_statistics/models/global_statistics.dart';
+import 'package:covid_app/repositories/statistics/models/global_statistics.dart';
 
 class GlobalRangeStat {
   final List<GlobalStatistics> statistics;

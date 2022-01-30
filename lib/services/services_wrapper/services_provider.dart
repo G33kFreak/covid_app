@@ -3,6 +3,8 @@ import 'package:covid_app/repositories/connectivity/abstract_connectivity_reposi
 import 'package:covid_app/repositories/connectivity/connectivity_repository.dart';
 import 'package:covid_app/repositories/permissions/abstract_permissions_repository.dart';
 import 'package:covid_app/repositories/permissions/permissions_repository.dart';
+import 'package:covid_app/repositories/statistics/abstract_statistics_repository.dart';
+import 'package:covid_app/repositories/statistics/statistics_repository.dart';
 import 'package:covid_app/services/connectivity/bloc/connectivity_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,7 +29,10 @@ class ServicesProvider extends StatelessWidget {
         ),
         RepositoryProvider<ApiClient>(
           create: (context) => ApiClient(),
-        )
+        ),
+        RepositoryProvider<IStatisticsRepository>(
+          create: (context) => StatisticsRepository(),
+        ),
       ],
       child: MultiBlocProvider(
         providers: [
