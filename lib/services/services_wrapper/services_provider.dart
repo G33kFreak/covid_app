@@ -1,3 +1,4 @@
+import 'package:covid_app/api_client/api_client.dart';
 import 'package:covid_app/repositories/connectivity/abstract_connectivity_repository.dart';
 import 'package:covid_app/repositories/connectivity/connectivity_repository.dart';
 import 'package:covid_app/repositories/permissions/abstract_permissions_repository.dart';
@@ -23,6 +24,9 @@ class ServicesProvider extends StatelessWidget {
         ),
         RepositoryProvider<IPermissionsRepository>(
           create: (context) => PermissionsRepository(),
+        ),
+        RepositoryProvider<ApiClient>(
+          create: (context) => ApiClient(),
         )
       ],
       child: MultiBlocProvider(

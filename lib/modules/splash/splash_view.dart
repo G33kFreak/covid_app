@@ -8,7 +8,17 @@ class SplashView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: SvgPicture.asset('assets/icons/splash_ic.svg'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset('assets/icons/splash_ic.svg'),
+            const SizedBox(height: 20),
+            Text(
+              'CoronA pp',
+              style: Theme.of(context).textTheme.headline2,
+            )
+          ],
+        ),
       ),
     );
   }
