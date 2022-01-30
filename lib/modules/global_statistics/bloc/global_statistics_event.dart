@@ -6,3 +6,14 @@ abstract class GlobalStatisticsEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+class InitGlobalStat extends GlobalStatisticsEvent {}
+
+class ChangedSelectedType extends GlobalStatisticsEvent {
+  final StatType newSelectedStat;
+
+  const ChangedSelectedType(this.newSelectedStat);
+
+  @override
+  List<Object> get props => [newSelectedStat];
+}

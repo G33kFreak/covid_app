@@ -20,6 +20,12 @@ dependencies:
   mockito:
   bloc_test:
   fl_chart:
+  json_serializable:
+  json_annotation:
+  http_status_code:
+  auto_size_text:
+  flutter_spinkit:
+  intl:
 
 
   cupertino_icons: ^1.0.2

@@ -1,21 +1,88 @@
 import 'package:covid_app/configs/colors.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
+import 'dart:math';
+
+import 'package:intl/intl.dart';
 
 class StatChart extends StatelessWidget {
-  StatChart({Key? key}) : super(key: key);
+  final List<int>? data;
 
-  final List<Color> gradientColors = [
+  StatChart({Key? key, this.data}) : super(key: key);
+
+  final List<Color> _gradientColors = [
     graphGradientStart.withOpacity(.5),
     graphGradientEnd.withOpacity(0),
   ];
 
+  List<int> _getDefaultData() => [for (int i = 1; i < 8; i++) 0];
+
+  List<FlSpot> _getSpots() {
+    final dataToSpots = data ?? _getDefaultData();
+
+    return dataToSpots
+        .mapIndexed((index, element) => FlSpot(index + 1, element.toDouble()))
+        .toList();
+  }
+
+  String _getTitleByX(int xValue) {
+    final now = DateTime.now();
+    final xValueDuration = Duration(days: 7 - xValue);
+    final dateByValue = now.subtract(xValueDuration);
+    return DateFormat('EEE').format(dateByValue);
+  }
+
+  String _getValueTitle(int value) {
+    final formattedNumber = NumberFormat.compact().format(value);
+
+    return formattedNumber;
+  }
+
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: 1.26,
+      aspectRatio: 1.56,
       child: LineChart(
         LineChartData(
+          lineTouchData: LineTouchData(
+            getTouchedSpotIndicator:
+                (LineChartBarData barData, List<int> spotIndexes) {
+              return spotIndexes.map(
+                (spotIndex) {
+                  return TouchedSpotIndicatorData(
+                    FlLine(color: white, strokeWidth: 0.5),
+                    FlDotData(
+                      getDotPainter: (spot, percent, barData, index) {
+                        return FlDotCirclePainter(
+                          radius: 5,
+                          color: accent,
+                          strokeWidth: 5,
+                          strokeColor: white,
+                        );
+                      },
+                    ),
+                  );
+                },
+              ).toList();
+            },
+            touchTooltipData: LineTouchTooltipData(
+              tooltipBgColor: Colors.transparent,
+              getTooltipItems: (List<LineBarSpot> lineBarsSpot) {
+                return lineBarsSpot.map(
+                  (lineBarSpot) {
+                    return LineTooltipItem(
+                      _getValueTitle(lineBarSpot.y.toInt()),
+                      Theme.of(context).textTheme.bodyText1!.copyWith(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 13,
+                          ),
+                    );
+                  },
+                ).toList();
+              },
+            ),
+          ),
           gridData: FlGridData(
             show: true,
             drawVerticalLine: false,
@@ -32,41 +99,25 @@ class StatChart extends StatelessWidget {
             topTitles: SideTitles(showTitles: false),
             bottomTitles: SideTitles(
               showTitles: true,
+              margin: 10,
               reservedSize: 22,
+              getTextStyles: (context, _) =>
+                  Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 13),
               interval: 1,
-              getTextStyles: (context, value) =>
-                  Theme.of(context).textTheme.bodyText1,
               getTitles: (value) {
-                switch (value.toInt()) {
-                  case 2:
-                    return 'MAR';
-                  case 5:
-                    return 'JUN';
-                  case 8:
-                    return 'SEP';
-                }
-                return '';
+                return _getTitleByX(value.toInt());
               },
-              margin: 8,
             ),
             leftTitles: SideTitles(
               showTitles: true,
-              interval: 1,
-              getTextStyles: (context, value) =>
-                  Theme.of(context).textTheme.bodyText1,
+              reservedSize: 38,
+              rotateAngle: 0,
+              margin: 5,
+              getTextStyles: (context, _) =>
+                  Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 12),
               getTitles: (value) {
-                switch (value.toInt()) {
-                  case 1:
-                    return '10k';
-                  case 3:
-                    return '30k';
-                  case 5:
-                    return '50k';
-                }
-                return '';
+                return _getValueTitle(value.toInt());
               },
-              reservedSize: 30,
-              margin: 8,
             ),
           ),
           borderData: FlBorderData(
@@ -78,21 +129,18 @@ class StatChart extends StatelessWidget {
               top: BorderSide(color: Colors.transparent),
             ),
           ),
-          minX: 0,
-          maxX: 11,
-          minY: 0,
-          maxY: 6,
+          minX: 1,
+          maxX: 7,
+          minY: data != null
+              ? data!.reduce(min).toDouble() -
+                  data!.reduce(max).toDouble() * .03
+              : 0,
+          maxY: data != null && data!.reduce(max).toDouble() != 0
+              ? data!.reduce(max).toDouble()
+              : 1000000,
           lineBarsData: [
             LineChartBarData(
-              spots: const [
-                FlSpot(0, 3),
-                FlSpot(2.6, 2),
-                FlSpot(4.9, 5),
-                FlSpot(6.8, 3.1),
-                FlSpot(8, 4),
-                FlSpot(9.5, 3),
-                FlSpot(11, 4),
-              ],
+              spots: _getSpots(),
               isCurved: true,
               colors: [graphGradientStart.withOpacity(.5)],
               barWidth: 4,
@@ -102,13 +150,14 @@ class StatChart extends StatelessWidget {
               ),
               belowBarData: BarAreaData(
                 show: true,
-                colors: gradientColors,
+                colors: _gradientColors,
                 gradientTo: const Offset(.5, 1.75),
                 gradientFrom: const Offset(.5, 0),
               ),
             ),
           ],
         ),
+        swapAnimationDuration: const Duration(milliseconds: 1500),
       ),
     );
   }
