@@ -27,4 +27,5 @@ const TextTheme textTheme = TextTheme(
   headline2: headline2,
   headline3: headline3,
   bodyText1: bodyText1,
+  subtitle1: bodyText1,
 );

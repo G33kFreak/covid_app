@@ -26,6 +26,9 @@ dependencies:
   auto_size_text:
   flutter_spinkit:
   intl:
+  geolocator:
+  geocode:
+  flutter_typeahead:
 
 
   cupertino_icons: ^1.0.2

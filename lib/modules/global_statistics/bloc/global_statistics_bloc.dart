@@ -1,5 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:covid_app/modules/global_statistics/utils/utils.dart';
+import 'package:covid_app/repositories/countries/abstract_countries_repository.dart';
+import 'package:covid_app/repositories/location/abstract_location_repository.dart';
+import 'package:covid_app/repositories/permissions/abstract_permissions_repository.dart';
 import 'package:covid_app/repositories/statistics/abstract_statistics_repository.dart';
 import 'package:covid_app/repositories/statistics/models/global_range_stat.dart';
 import 'package:covid_app/repositories/statistics/models/global_statistics.dart';
@@ -15,13 +18,47 @@ class GlobalStatisticsBloc
     extends Bloc<GlobalStatisticsEvent, GlobalStatisticsState> {
   final Dio client;
   final IStatisticsRepository statisticsRepository;
+  final IPermissionsRepository permissionsRepository;
+  final ILocationRepository locationRepository;
+  final ICountriesRepository countriesRepository;
 
   GlobalStatisticsBloc({
     required this.client,
     required this.statisticsRepository,
+    required this.permissionsRepository,
+    required this.locationRepository,
+    required this.countriesRepository,
   }) : super(const GlobalStatisticsState()) {
     on<InitGlobalStat>(_onInit);
     on<ChangedSelectedType>(_onChangedSelectedType);
+    on<RequestedMyLocation>(_onLocationRequested);
+  }
+
+  Future<void> _onLocationRequested(
+    RequestedMyLocation event,
+    Emitter<GlobalStatisticsState> emit,
+  ) async {
+    emit(state.copyWith(locationLoadingStatus: LoadingStatus.loading));
+    bool isPermissionGranded =
+        await permissionsRepository.isLocationPermissionGranted();
+
+    if (!isPermissionGranded) {
+      isPermissionGranded =
+          await permissionsRepository.askForLocationPermission();
+    }
+
+    if (isPermissionGranded) {
+      final myLocation = await locationRepository.getCoordinates();
+      final country =
+          await locationRepository.getCountryByCoordinates(myLocation);
+      final countrySlug = countriesRepository.getCountrySlug(country!);
+      emit(state.copyWith(
+        locationLoadingStatus: LoadingStatus.done,
+        locationCountry: countrySlug,
+      ));
+    } else {
+      emit(state.copyWith(locationLoadingStatus: LoadingStatus.done));
+    }
   }
 
   void _onChangedSelectedType(

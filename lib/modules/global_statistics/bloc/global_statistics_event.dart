@@ -17,3 +17,5 @@ class ChangedSelectedType extends GlobalStatisticsEvent {
   @override
   List<Object> get props => [newSelectedStat];
 }
+
+class RequestedMyLocation extends GlobalStatisticsEvent {}

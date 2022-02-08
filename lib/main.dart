@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
         navigatorKey: _navigatorKey,
         routes: Routes.getRoutes(context),
         theme: ThemeData(
+          colorScheme: const ColorScheme.dark(primary: white),
           textTheme: textTheme,
           backgroundColor: background,
           scaffoldBackgroundColor: background,

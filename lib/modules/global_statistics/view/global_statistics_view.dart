@@ -1,6 +1,10 @@
 import 'package:covid_app/api_client/api_client.dart';
 import 'package:covid_app/modules/global_statistics/bloc/global_statistics_bloc.dart';
 import 'package:covid_app/modules/global_statistics/widgets/global_buttons.dart';
+import 'package:covid_app/modules/global_statistics/widgets/search_and_location.dart';
+import 'package:covid_app/repositories/countries/abstract_countries_repository.dart';
+import 'package:covid_app/repositories/location/abstract_location_repository.dart';
+import 'package:covid_app/repositories/permissions/abstract_permissions_repository.dart';
 import 'package:covid_app/repositories/statistics/abstract_statistics_repository.dart';
 import 'package:covid_app/widgets/stat_chart.dart';
 import 'package:flutter/material.dart';
@@ -16,12 +20,16 @@ class GlobalStatisticsView extends StatelessWidget {
         final bloc = GlobalStatisticsBloc(
           client: context.read<ApiClient>().client,
           statisticsRepository: context.read<IStatisticsRepository>(),
+          permissionsRepository: context.read<IPermissionsRepository>(),
+          locationRepository: context.read<ILocationRepository>(),
+          countriesRepository: context.read<ICountriesRepository>(),
         );
 
         bloc.add(InitGlobalStat());
         return bloc;
       },
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(
@@ -38,6 +46,8 @@ class GlobalStatisticsView extends StatelessWidget {
                         style: Theme.of(context).textTheme.headline2,
                         textAlign: TextAlign.center,
                       ),
+                      const Spacer(),
+                      const SearchAndLocation(),
                       const Spacer(),
                       StatChart(
                         data: state.loadingStatus == LoadingStatus.done

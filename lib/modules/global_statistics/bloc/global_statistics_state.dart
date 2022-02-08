@@ -17,6 +17,8 @@ class GlobalStatisticsState extends Equatable {
   final LoadingStatus loadingStatus;
   final StatType selectedStat;
   final List<int>? statToShow;
+  final String? locationCountry;
+  final LoadingStatus locationLoadingStatus;
 
   const GlobalStatisticsState({
     this.statistics,
@@ -24,6 +26,8 @@ class GlobalStatisticsState extends Equatable {
     this.loadingStatus = LoadingStatus.loading,
     this.selectedStat = StatType.totalConfirmed,
     this.statToShow,
+    this.locationCountry,
+    this.locationLoadingStatus = LoadingStatus.done,
   });
 
   GlobalStatisticsState copyWith({
@@ -32,13 +36,18 @@ class GlobalStatisticsState extends Equatable {
     LoadingStatus? loadingStatus,
     StatType? selectedStat,
     List<int>? statToShow,
+    String? locationCountry,
+    LoadingStatus? locationLoadingStatus,
   }) =>
       GlobalStatisticsState(
         statistics: statistics ?? this.statistics,
         rangeStat: rangeStat ?? this.rangeStat,
         loadingStatus: loadingStatus ?? this.loadingStatus,
         selectedStat: selectedStat ?? this.selectedStat,
-        statToShow: statToShow,
+        statToShow: statToShow ?? this.statToShow,
+        locationCountry: locationCountry ?? this.locationCountry,
+        locationLoadingStatus:
+            locationLoadingStatus ?? this.locationLoadingStatus,
       );
 
   @override
@@ -48,5 +57,7 @@ class GlobalStatisticsState extends Equatable {
         loadingStatus,
         selectedStat,
         statToShow,
+        locationCountry,
+        locationLoadingStatus,
       ];
 }

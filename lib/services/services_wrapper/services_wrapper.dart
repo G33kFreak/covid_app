@@ -1,5 +1,6 @@
 import 'package:covid_app/routes/routes.dart';
 import 'package:covid_app/services/connectivity/bloc/connectivity_bloc.dart';
+import 'package:covid_app/services/countries/bloc/countries_service_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -13,7 +14,8 @@ class ServicesWrapper extends StatelessWidget {
     required this.navigatorKey,
   }) : super(key: key);
 
-  Future<void> _toGlobal() async {
+  Future<void> _toGlobal(BuildContext context) async {
+    context.read<CountriesServiceBloc>().add(LoadCountries());
     await Future.delayed(const Duration(milliseconds: 800));
     navigatorKey.currentState?.pushReplacementNamed(
       Routes.globalStatistics,
@@ -31,7 +33,7 @@ class ServicesWrapper extends StatelessWidget {
         BlocListener<ConnectivityBloc, ConnectivityState>(
           listener: (context, state) async {
             if (state.status == ConnectionStatus.connected) {
-              await _toGlobal();
+              await _toGlobal(context);
             }
             if (state.status == ConnectionStatus.disconnected) {
               _toNoConnection();
