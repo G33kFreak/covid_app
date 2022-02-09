@@ -1,5 +1,8 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:covid_app/modules/global_statistics/bloc/global_statistics_bloc.dart';
+import 'package:covid_app/repositories/countries/abstract_countries_repository.dart';
+import 'package:covid_app/repositories/location/abstract_location_repository.dart';
+import 'package:covid_app/repositories/permissions/abstract_permissions_repository.dart';
 import 'package:covid_app/repositories/statistics/abstract_statistics_repository.dart';
 import 'package:covid_app/repositories/statistics/models/global_range_stat.dart';
 import 'package:covid_app/repositories/statistics/models/global_statistics.dart';
@@ -9,12 +12,23 @@ import 'package:mockito/mockito.dart';
 
 import 'global_statistics_test.mocks.dart';
 
-@GenerateMocks([IStatisticsRepository, Dio, GlobalStatistics, GlobalRangeStat])
+@GenerateMocks([
+  IStatisticsRepository,
+  Dio,
+  GlobalStatistics,
+  GlobalRangeStat,
+  ICountriesRepository,
+  ILocationRepository,
+  IPermissionsRepository,
+])
 void main() {
   final statisticsRepository = MockIStatisticsRepository();
   final dio = MockDio();
   final globalStatistics = MockGlobalStatistics();
   final rangeStatistics = MockGlobalRangeStat();
+  final countriesRepository = MockICountriesRepository();
+  final locationRepository = MockILocationRepository();
+  final permissionsRepository = MockIPermissionsRepository();
   blocTest<GlobalStatisticsBloc, GlobalStatisticsState>(
     'Init and changing selected stat type in GlobalStatisticsBloc',
     setUp: () {
@@ -42,6 +56,9 @@ void main() {
     build: () => GlobalStatisticsBloc(
       client: dio,
       statisticsRepository: statisticsRepository,
+      countriesRepository: countriesRepository,
+      locationRepository: locationRepository,
+      permissionsRepository: permissionsRepository,
     ),
     wait: const Duration(milliseconds: 400),
     act: (bloc) => bloc

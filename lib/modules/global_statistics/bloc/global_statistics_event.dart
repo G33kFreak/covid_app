@@ -19,3 +19,5 @@ class ChangedSelectedType extends GlobalStatisticsEvent {
 }
 
 class RequestedMyLocation extends GlobalStatisticsEvent {}
+
+class NavigatedByLocation extends GlobalStatisticsEvent {}

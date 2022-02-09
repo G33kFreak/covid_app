@@ -32,6 +32,7 @@ class GlobalStatisticsBloc
     on<InitGlobalStat>(_onInit);
     on<ChangedSelectedType>(_onChangedSelectedType);
     on<RequestedMyLocation>(_onLocationRequested);
+    on<NavigatedByLocation>(_onNavigatedByLocation);
   }
 
   Future<void> _onLocationRequested(
@@ -102,5 +103,12 @@ class GlobalStatisticsBloc
     } catch (e) {
       logger.e('Uncaught error', e);
     }
+  }
+
+  void _onNavigatedByLocation(
+    NavigatedByLocation event,
+    Emitter<GlobalStatisticsState> emit,
+  ) {
+    emit(state.setLocationAsNull());
   }
 }

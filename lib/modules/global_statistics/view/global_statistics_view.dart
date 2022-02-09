@@ -6,6 +6,7 @@ import 'package:covid_app/repositories/countries/abstract_countries_repository.d
 import 'package:covid_app/repositories/location/abstract_location_repository.dart';
 import 'package:covid_app/repositories/permissions/abstract_permissions_repository.dart';
 import 'package:covid_app/repositories/statistics/abstract_statistics_repository.dart';
+import 'package:covid_app/routes/routes.dart';
 import 'package:covid_app/widgets/stat_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,38 +29,49 @@ class GlobalStatisticsView extends StatelessWidget {
         bloc.add(InitGlobalStat());
         return bloc;
       },
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 17,
-              vertical: kToolbarHeight * .5,
-            ),
-            child: Center(
-              child: BlocBuilder<GlobalStatisticsBloc, GlobalStatisticsState>(
-                builder: (context, state) {
-                  return Column(
-                    children: [
-                      Text(
-                        'Global',
-                        style: Theme.of(context).textTheme.headline2,
-                        textAlign: TextAlign.center,
-                      ),
-                      const Spacer(),
-                      const SearchAndLocation(),
-                      const Spacer(),
-                      StatChart(
-                        data: state.loadingStatus == LoadingStatus.done
-                            ? state.statToShow
-                            : null,
-                      ),
-                      const Spacer(),
-                      const GlobalButtons(),
-                      const Spacer(),
-                    ],
-                  );
-                },
+      child: BlocListener<GlobalStatisticsBloc, GlobalStatisticsState>(
+        listener: (context, state) {
+          if (state.locationCountry != null) {
+            Navigator.of(context).pushNamed(
+              Routes.locationStatistics,
+              arguments: {'country': state.locationCountry},
+            );
+            context.read<GlobalStatisticsBloc>().add(NavigatedByLocation());
+          }
+        },
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 17,
+                vertical: kToolbarHeight * .5,
+              ),
+              child: Center(
+                child: BlocBuilder<GlobalStatisticsBloc, GlobalStatisticsState>(
+                  builder: (context, state) {
+                    return Column(
+                      children: [
+                        Text(
+                          'Global',
+                          style: Theme.of(context).textTheme.headline2,
+                          textAlign: TextAlign.center,
+                        ),
+                        const Spacer(),
+                        const SearchAndLocation(),
+                        const Spacer(),
+                        StatChart(
+                          data: state.loadingStatus == LoadingStatus.done
+                              ? state.statToShow
+                              : null,
+                        ),
+                        const Spacer(),
+                        const GlobalButtons(),
+                        const Spacer(),
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
           ),

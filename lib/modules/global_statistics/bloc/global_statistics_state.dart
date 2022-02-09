@@ -50,6 +50,16 @@ class GlobalStatisticsState extends Equatable {
             locationLoadingStatus ?? this.locationLoadingStatus,
       );
 
+  GlobalStatisticsState setLocationAsNull() => GlobalStatisticsState(
+        statistics: statistics,
+        rangeStat: rangeStat,
+        loadingStatus: loadingStatus,
+        selectedStat: selectedStat,
+        statToShow: statToShow,
+        locationCountry: null,
+        locationLoadingStatus: locationLoadingStatus,
+      );
+
   @override
   List<Object?> get props => [
         statistics,
